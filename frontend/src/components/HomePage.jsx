@@ -6,14 +6,14 @@ import { Popup } from "./Popup";
 export const HomePage = () => {
   const [isFormOpen, setIsFormOpen]=useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const { data: images, error, isLoading, isSuccess } = useGetImagesQuery();
 
-   const handlePurchaseClick = () => {
+   const handlePurchaseClick = (image) => {
+    setSelectedImage(image);
     setIsPopupOpen(true);
   };
-
-  console.log(images);
 
   let content
 
@@ -36,13 +36,12 @@ export const HomePage = () => {
         
       </div>
       <button
-          onClick={handlePurchaseClick}
+          onClick={() => handlePurchaseClick(image)}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200"
         >
           Purchase
         </button>
-        {isPopupOpen && <Popup setIsPopupOpen={setIsPopupOpen} prise={image.prise} name={image.name}/>}
-    </div>
+      </div>
         )
       })}
     </div>
@@ -56,7 +55,13 @@ export const HomePage = () => {
  ADD
 </button>
 {isFormOpen && <AddImageForm setIsFormOpen={setIsFormOpen}/>}
-
+{isPopupOpen && selectedImage && (
+        <Popup 
+          setIsPopupOpen={setIsPopupOpen} 
+          prise={selectedImage.prise} 
+          name={selectedImage.name} 
+        />
+      )}
   </>
     
   );
